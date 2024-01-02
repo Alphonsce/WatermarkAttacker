@@ -33,7 +33,7 @@ from packaging import version
 from requests.exceptions import HTTPError
 from tqdm.auto import tqdm
 
-import diffusers
+import wm_attacks
 
 from .. import __version__
 from ..configuration_utils import ConfigMixin
@@ -414,11 +414,11 @@ def load_sub_model(
     loading_kwargs = {}
     if issubclass(class_obj, torch.nn.Module):
         loading_kwargs["torch_dtype"] = torch_dtype
-    if issubclass(class_obj, diffusers.OnnxRuntimeModel):
+    if issubclass(class_obj, wm_attacks.OnnxRuntimeModel):
         loading_kwargs["provider"] = provider
         loading_kwargs["sess_options"] = sess_options
 
-    is_diffusers_model = issubclass(class_obj, diffusers.ModelMixin)
+    is_diffusers_model = issubclass(class_obj, wm_attacks.ModelMixin)
 
     if is_transformers_available():
         transformers_version = version.parse(version.parse(transformers.__version__).base_version)
@@ -497,7 +497,7 @@ class DiffusionPipeline(ConfigMixin):
 
     def register_modules(self, **kwargs):
         # import it here to avoid circular import
-        from diffusers import pipelines
+        from wm_attacks import pipelines
 
         for name, module in kwargs.items():
             # retrieve library
@@ -958,7 +958,7 @@ class DiffusionPipeline(ConfigMixin):
         if pipeline_class.__name__ == "StableDiffusionInpaintPipeline" and version.parse(
             version.parse(config_dict["_diffusers_version"]).base_version
         ) <= version.parse("0.5.1"):
-            from diffusers import StableDiffusionInpaintPipeline, StableDiffusionInpaintPipelineLegacy
+            from wm_attacks import StableDiffusionInpaintPipeline, StableDiffusionInpaintPipelineLegacy
 
             pipeline_class = StableDiffusionInpaintPipelineLegacy
 
@@ -1041,7 +1041,7 @@ class DiffusionPipeline(ConfigMixin):
             )
 
         # import it here to avoid circular import
-        from diffusers import pipelines
+        from wm_attacks import pipelines
 
         # 6. Load each module in the pipeline
         for name, (library_name, class_name) in tqdm(init_dict.items(), desc="Loading pipeline components..."):
@@ -1494,7 +1494,7 @@ class DiffusionPipeline(ConfigMixin):
 
             # retrieve pipeline class from local file
             cls_name = cls.load_config(os.path.join(cached_folder, "model_index.json")).get("_class_name", None)
-            pipeline_class = getattr(diffusers, cls_name, None)
+            pipeline_class = getattr(wm_attacks, cls_name, None)
 
             if pipeline_class is not None and pipeline_class._load_connected_pipes:
                 modelcard = ModelCard.load(os.path.join(cached_folder, "README.md"))

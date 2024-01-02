@@ -108,7 +108,7 @@ class FlaxDiffusionPipeline(ConfigMixin):
 
     def register_modules(self, **kwargs):
         # import it here to avoid circular import
-        from diffusers import pipelines
+        from wm_attacks import pipelines
 
         for name, module in kwargs.items():
             if module is None:
@@ -366,7 +366,7 @@ class FlaxDiffusionPipeline(ConfigMixin):
         params = {}
 
         # import it here to avoid circular import
-        from diffusers import pipelines
+        from wm_attacks import pipelines
 
         # 3. Load each module in the pipeline
         for name, (library_name, class_name) in init_dict.items():

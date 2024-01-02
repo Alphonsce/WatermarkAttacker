@@ -21,9 +21,9 @@ from typing import List, Optional, Tuple, Union
 import numpy as np
 import torch
 
-from diffusers.configuration_utils import ConfigMixin, register_to_config
-from diffusers.schedulers.scheduling_utils import SchedulerMixin
-from diffusers.utils import BaseOutput, deprecate
+from wm_attacks.configuration_utils import ConfigMixin, register_to_config
+from wm_attacks.schedulers.scheduling_utils import SchedulerMixin
+from wm_attacks.utils import BaseOutput, deprecate
 
 
 @dataclass

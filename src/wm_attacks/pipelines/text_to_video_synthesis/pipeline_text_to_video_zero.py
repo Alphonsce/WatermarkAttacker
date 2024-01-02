@@ -9,10 +9,10 @@ import torch.nn.functional as F
 from torch.nn.functional import grid_sample
 from transformers import CLIPImageProcessor, CLIPTextModel, CLIPTokenizer
 
-from diffusers.models import AutoencoderKL, UNet2DConditionModel
-from diffusers.pipelines.stable_diffusion import StableDiffusionPipeline, StableDiffusionSafetyChecker
-from diffusers.schedulers import KarrasDiffusionSchedulers
-from diffusers.utils import BaseOutput
+from wm_attacks.models import AutoencoderKL, UNet2DConditionModel
+from wm_attacks.pipelines.stable_diffusion import StableDiffusionPipeline, StableDiffusionSafetyChecker
+from wm_attacks.schedulers import KarrasDiffusionSchedulers
+from wm_attacks.utils import BaseOutput
 
 
 def rearrange_0(tensor, f):

@@ -22,7 +22,7 @@ import torch
 import torch.nn.functional as F
 from transformers import CLIPTextModel, CLIPTextModelWithProjection, CLIPTokenizer
 
-from diffusers.utils.import_utils import is_invisible_watermark_available
+from wm_attacks.utils.import_utils import is_invisible_watermark_available
 
 from ...image_processor import VaeImageProcessor
 from ...loaders import LoraLoaderMixin, TextualInversionLoaderMixin
