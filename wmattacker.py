@@ -42,7 +42,6 @@ class VAEWMAttacker(WMAttacker):
             rec = transforms.ToPILImage()(out['x_hat'].squeeze().cpu())
             rec.save(out_path)
 
-
 class GaussianBlurAttacker(WMAttacker):
     def __init__(self, kernel_size=5, sigma=1):
         self.kernel_size = kernel_size
