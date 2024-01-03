@@ -23,7 +23,7 @@ import numpy as np
 from wm_attacks import ReSDPipeline
 
 from utils import eval_psnr_ssim_msssim, bytearray_to_bits
-from wmattacker_no_saving import DiffWMAttacker, VAEWMAttacker
+from wm_attacks.wmattacker_no_saving import DiffWMAttacker, VAEWMAttacker
 
 from tqdm import tqdm
 
