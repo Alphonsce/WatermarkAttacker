@@ -114,8 +114,8 @@ _deps = [
     "requests",
     "tensorboard",
     "torch>=1.4",
-    "torchvision",
-    "transformers>=4.25.1",
+    "torchvision=0.14.0",
+    "transformers==4.31.0",
     "urllib3<=2.0.0",
 ]
 
