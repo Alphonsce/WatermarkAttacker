@@ -109,7 +109,7 @@ for attacker_name in attackers.keys():
         wm_img = PIL.Image.open(wm_img_path)
         attacked_wm_img = attackers[attacker_name].attack(wm_img)
     
-    attacked_wm_img.save(f"{attacker_name}_test.png")
+    attacked_wm_img.save(f"./test_attacks/{attacker_name}_test.png")
 
 print('Finished attacking')
 
