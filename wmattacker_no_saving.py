@@ -49,7 +49,7 @@ class VAEWMAttacker(WMAttacker):
         out = self.model(img)
         out['x_hat'].clamp_(0, 1)
         rec = transforms.ToPILImage()(out['x_hat'].squeeze().cpu())
-        return img
+        return rec
 
 class GaussianBlurAttacker(WMAttacker):
     def __init__(self, kernel_size=5, sigma=1):
@@ -177,8 +177,8 @@ class DiffWMAttacker(WMAttacker):
                                    head_start_step=50 - max(self.noise_step // 20, 1),
                                    guidance_scale=7.5,
                                    generator=generator, )
-                image = image[0]
-                return image
+
+                return image[0][0]
 
             if len(self.captions) != 0:
                 prompts = []
@@ -203,4 +203,5 @@ class DiffWMAttacker(WMAttacker):
             latents_buf.append(latents)
             prompts_buf.append(prompt)
             if len(latents_buf) == self.BATCH_SIZE:
-                batched_attack(latents_buf, prompts_buf)
+                attacked_img = batched_attack(latents_buf, prompts_buf)
+                return attacked_img
