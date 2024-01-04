@@ -107,7 +107,7 @@ for attacker_name in attackers.keys():
         img_name = os.path.basename(ori_img_path)
         wm_img_path = os.path.join(output_path, "Tree-Ring" + '/noatt', "w_" + img_name)
         wm_img = PIL.Image.open(wm_img_path)
-        attacked_wm_img = attackers[attacker_name].attack(wm_img, prompt="")
+        attacked_wm_img = attackers[attacker_name].attack(wm_img)
     
     attacked_wm_img.save(f"./test_attacks/{attacker_name}_test.png")
 
