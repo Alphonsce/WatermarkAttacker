@@ -154,15 +154,14 @@ class CropAttacker(WMAttacker):
 
 
 class DiffWMAttacker(WMAttacker):
-    def __init__(self, pipe, noise_step=60, prompt=""):
+    def __init__(self, pipe, noise_step=60):
         self.pipe = pipe
         self.BATCH_SIZE = 1
         self.device = pipe.device
         self.noise_step = noise_step
-        self.prompt = prompt
-        print(f'Diffuse attack initialized with noise step {self.noise_step} and use prompt: {self.prompt}')
+        print(f'Diffuse attack initialized with noise step {self.noise_step}')
 
-    def attack(self, img):
+    def attack(self, img, prompt=""):
         with torch.no_grad():
             generator = torch.Generator(self.device).manual_seed(1024)
             latents_buf = []
@@ -180,7 +179,6 @@ class DiffWMAttacker(WMAttacker):
 
                 return image[0][0]
 
-            prompt = self.prompt
             img = np.asarray(img) / 255
             img = (img - 0.5) * 2
             img = torch.tensor(img, dtype=torch.float16, device=self.device).permute(2, 0, 1).unsqueeze(0)

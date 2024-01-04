@@ -72,7 +72,7 @@ print('Finished loading model')
 
 
 attackers = {
-    'diff_attacker_60': DiffWMAttacker(pipe, noise_step=60, captions={}),
+    'diff_attacker_60': DiffWMAttacker(pipe, noise_step=60),
     'cheng2020-anchor_3': VAEWMAttacker('cheng2020-anchor', quality=3, metric='mse', device=device),
     'bmshj2018-factorized_3': VAEWMAttacker('bmshj2018-factorized', quality=3, metric='mse', device=device),
     # 'rotation_75': RotateAttacker(degree=75),
@@ -107,7 +107,7 @@ for attacker_name in attackers.keys():
         img_name = os.path.basename(ori_img_path)
         wm_img_path = os.path.join(output_path, "Tree-Ring" + '/noatt', "w_" + img_name)
         wm_img = PIL.Image.open(wm_img_path)
-        attacked_wm_img = attackers[attacker_name].attack(wm_img)
+        attacked_wm_img = attackers[attacker_name].attack(wm_img, prompt="")
     
     attacked_wm_img.save(f"./test_attacks/{attacker_name}_test.png")
 
