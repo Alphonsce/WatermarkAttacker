@@ -101,6 +101,7 @@ attackers = {
 
 # In[9]:
 
+os.makedirs(os.path.join(output_path, wmarker_name, attacker_name), exist_ok=True)``
 
 for attacker_name in attackers.keys():
     for ori_img_path in tqdm(ori_img_paths[:1]):

@@ -25,24 +25,31 @@ from wm_attacks import ReSDPipeline
 from utils import eval_psnr_ssim_msssim, bytearray_to_bits
 from wmattacker import DiffWMAttacker, VAEWMAttacker, JPEGAttacker
 
+from tqdm import tqdm
+
 
 # In[3]:
 
 
 wm_text = 'test'
 device = 'cuda:0'
-ori_path = 'images/imgs_no_w/'
-output_path = 'images/imgs_w/'
+
+images_folder = "/data/varlamov_a_data/dima/attacks/WatermarkAttacker/fid_outputs/coco/fid_run"
+orig_path = images_folder + '/no_w_gen'
+wm_path = images_folder + '/w_gen'
+att_path = images_folder + '/att_w_gen'
+
 print_width = 50
 
 
 # In[4]:
 
 
-os.makedirs(output_path, exist_ok=True)
-ori_img_paths = glob.glob(os.path.join(ori_path, '*.*'))
+os.makedirs(wm_path, exist_ok=True)
+ori_img_paths = glob.glob(os.path.join(orig_path, '*.*'))
 ori_img_paths = sorted([path for path in ori_img_paths if path.lower().endswith(('.jpg', '.jpeg', '.png', '.bmp', '.gif'))])
 
+# print(len(ori_img_paths))
 
 # In[5]:
 
@@ -71,9 +78,9 @@ print('Finished loading model')
 
 
 attackers = {
-    'diff_attacker_60': DiffWMAttacker(pipe, batch_size=5, noise_step=60, captions={}),
+    # 'diff_attacker_60': DiffWMAttacker(pipe, batch_size=5, noise_step=60, captions={}),
     'cheng2020-anchor_3': VAEWMAttacker('cheng2020-anchor', quality=3, metric='mse', device=device),
-    'bmshj2018-factorized_3': VAEWMAttacker('bmshj2018-factorized', quality=3, metric='mse', device=device),
+    # 'bmshj2018-factorized_3': VAEWMAttacker('bmshj2018-factorized', quality=3, metric='mse', device=device),
     # 'rotation_75': RotateAttacker(degree=75),
     # 'jpeg_attacker_25': JPEGAttacker(quality=25),
     # 'crop_0_75': CropAttacker(crop_size=0.75),
@@ -88,10 +95,10 @@ attackers = {
 # def add_watermark(wmarker_name, wmarker):
 #     print('*' * print_width)
 #     print(f'Watermarking with {wmarker_name}')
-#     os.makedirs(os.path.join(output_path, wmarker_name + '/noatt'), exist_ok=True)
+#     os.makedirs(os.path.join(wm_path, wmarker_name + '/noatt'), exist_ok=True)
 #     for ori_img_path in ori_img_paths:
 #         img_name = os.path.basename(ori_img_path)
-#         wmarker.encode(ori_img_path, os.path.join(output_path, wmarker_name + '/noatt', img_name))
+#         wmarker.encode(ori_img_path, os.path.join(wm_path, wmarker_name + '/noatt', img_name))
 
 # for wmarker_name, wmarker in wmarkers.items():
 #     add_watermark(wmarker_name, wmarker)
@@ -100,46 +107,50 @@ attackers = {
 
 # In[9]:
 
+# attacker = attackers["cheng2020-anchor_3"]
 
-for wmarker_name, wmarker in wmarkers.items():
-    for attacker_name, attacker in attackers.items():
-        print('*' * print_width)
-        print(f'Attacking {wmarker_name} with {attacker_name}')
-        wm_img_paths = []
-        att_img_paths = []
-        os.makedirs(os.path.join(output_path, wmarker_name, attacker_name), exist_ok=True)
-        for ori_img_path in ori_img_paths:
-            img_name = os.path.basename(ori_img_path)
-            wm_img_paths.append(os.path.join(output_path, wmarker_name + '/noatt', "w_" + img_name))
-            att_img_paths.append(os.path.join(output_path, wmarker_name, attacker_name, "w_" + img_name))
-        attackers[attacker_name].attack(wm_img_paths, att_img_paths)
+
+wm_img_paths = []
+att_img_paths = []
+os.makedirs(os.path.join(att_path), exist_ok=True)
+for ori_img_path in ori_img_paths:
+    img_name = os.path.basename(ori_img_path)
+    wm_img_paths.append(os.path.join(wm_path, img_name))
+    att_img_paths.append(os.path.join(att_path, img_name))
+attacker.attack(wm_img_paths, att_img_paths)
 
 print('Finished attacking')
 
 
 # In[10]:
+wm_psnr_list = []
+wm_ssim_list = []
 
-# wm_results = {}
-# for wmarker_name, wmarker in wmarkers.items():
-#     print('*' * print_width)
-#     print(f'Watermark: {wmarker_name}')
-#     wm_successes = []
-#     wm_psnr_list = []
-#     wm_ssim_list = []
-#     wm_msssim_list = []
-#     for ori_img_path in ori_img_paths:
-#         img_name = os.path.basename(ori_img_path)
-#         wm_img_path = os.path.join(output_path, wmarker_name+'/noatt', img_name)
-#         wm_psnr, wm_ssim, wm_msssim = eval_psnr_ssim_msssim(ori_img_path, wm_img_path)
-#         wm_psnr_list.append(wm_psnr)
-#         wm_ssim_list.append(wm_ssim)
-#         wm_msssim_list.append(wm_msssim)
-#     wm_results[wmarker_name] = {}
-#     wm_results[wmarker_name]['wm_psnr'] = np.array(wm_psnr_list).mean()
-#     wm_results[wmarker_name]['wm_ssim'] = np.array(wm_ssim_list).mean()
-#     wm_results[wmarker_name]['wm_msssim'] = np.array(wm_msssim_list).mean()
+att_psnr_list = []
+att_ssim_list = []
 
-# print('Finished evaluating watermarking')
+for ori_img_path in tqdm(ori_img_paths):
+    img_name = os.path.basename(ori_img_path)
+    wm_img_path = os.path.join(wm_path, img_name)
+    att_img_path = os.path.join(att_path, img_name)
+
+    wm_psnr, wm_ssim, wm_msssim = eval_psnr_ssim_msssim(ori_img_path, wm_img_path)
+    wm_psnr_list.append(wm_psnr)
+    wm_ssim_list.append(wm_ssim)
+
+    att_psnr, att_ssim, att_msssim = eval_psnr_ssim_msssim(ori_img_path, att_img_path)
+    att_psnr_list.append(att_psnr)
+    att_ssim_list.append(att_ssim)
+
+wm_psnr = np.array(wm_psnr_list).mean()
+wm_ssim = np.array(wm_ssim_list).mean()
+att_psnr = np.array(att_psnr_list).mean()
+att_ssim_list = np.array(att_ssim_list).mean()
+
+print(
+    f"{wm_psnr=}, {wm_ssim=}, {att_psnr=}, {att_ssim=}"
+)
+print('Finished evaluating watermarking')
 
 
 # # In[11]:
@@ -159,7 +170,7 @@ print('Finished attacking')
 #     wm_successes = []
 #     for ori_img_path in ori_img_paths:
 #         img_name = os.path.basename(ori_img_path)
-#         wm_img_path = os.path.join(output_path, wmarker_name+'/noatt', img_name)
+#         wm_img_path = os.path.join(wm_path, wmarker_name+'/noatt', img_name)
 #         wm_text = wmarkers[wmarker_name].decode(wm_img_path)
 #         try:
 #             if type(wm_text) == bytes:
@@ -202,7 +213,7 @@ print('Finished attacking')
 #         wm_successes = []
 #         for ori_img_path in ori_img_paths:
 #             img_name = os.path.basename(ori_img_path)
-#             att_img_path = os.path.join(output_path, wmarker_name, attacker_name, img_name)
+#             att_img_path = os.path.join(wm_path, wmarker_name, attacker_name, img_name)
 #             att_text = wmarkers[wmarker_name].decode(att_img_path)
 #             try:
 #                 if type(att_text) == bytes:
