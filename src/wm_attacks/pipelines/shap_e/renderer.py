@@ -530,9 +530,7 @@ class MeshDecoder(nn.Module):
         corner_coords[range(grid_size[0]), :, :, 0] = torch.arange(grid_size[0], device=dev, dtype=field.dtype)[
             :, None, None
         ]
-        corner_coords[:, range(grid_size[1]), :, 1] = torch.arange(grid_size[1], device=dev, dtype=field.dtype)[
-            :, None
-        ]
+        corner_coords[:, range(grid_size[1]), :, 1] = torch.arange(grid_size[1], device=dev, dtype=field.dtype)[:, None]
         corner_coords[:, :, range(grid_size[2]), 2] = torch.arange(grid_size[2], device=dev, dtype=field.dtype)
 
         # Compute all vertices across all edges in the grid, even though we will
@@ -935,9 +933,7 @@ class ShapERenderer(ModelMixin, ConfigMixin):
             # render rays with coarse, stratified samples.
             _, fine_sampler, coarse_model_out = self.render_rays(rays_batch, coarse_sampler, n_coarse_samples)
             # Then, render with additional importance-weighted ray samples.
-            channels, _, _ = self.render_rays(
-                rays_batch, fine_sampler, n_fine_samples, prev_model_out=coarse_model_out
-            )
+            channels, _, _ = self.render_rays(rays_batch, fine_sampler, n_fine_samples, prev_model_out=coarse_model_out)
 
             images.append(channels)
 
@@ -974,9 +970,7 @@ class ShapERenderer(ModelMixin, ConfigMixin):
         for idx in range(0, query_positions.shape[1], query_batch_size):
             query_batch = query_positions[:, idx : idx + query_batch_size]
 
-            model_out = self.mlp(
-                position=query_batch, direction=None, ts=None, nerf_level="fine", rendering_mode="stf"
-            )
+            model_out = self.mlp(position=query_batch, direction=None, ts=None, nerf_level="fine", rendering_mode="stf")
             fields.append(model_out.signed_distance)
 
         # predicted SDF values

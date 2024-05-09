@@ -1,9 +1,9 @@
 ###
 
-'''
+"""
 This is a copy of wmattacker.py script, BUT:
     - images are NOT stored in folders
-'''
+"""
 
 ###
 
@@ -26,30 +26,31 @@ class WMAttacker:
 
 
 class VAEWMAttacker(WMAttacker):
-    def __init__(self, model_name, quality=1, metric='mse', device='cpu'):
-        if model_name == 'bmshj2018-factorized':
+    def __init__(self, model_name, quality=1, metric="mse", device="cpu"):
+        if model_name == "bmshj2018-factorized":
             self.model = bmshj2018_factorized(quality=quality, pretrained=True).eval().to(device)
-        elif model_name == 'bmshj2018-hyperprior':
+        elif model_name == "bmshj2018-hyperprior":
             self.model = bmshj2018_hyperprior(quality=quality, pretrained=True).eval().to(device)
-        elif model_name == 'mbt2018-mean':
+        elif model_name == "mbt2018-mean":
             self.model = mbt2018_mean(quality=quality, pretrained=True).eval().to(device)
-        elif model_name == 'mbt2018':
+        elif model_name == "mbt2018":
             self.model = mbt2018(quality=quality, pretrained=True).eval().to(device)
-        elif model_name == 'cheng2020-anchor':
+        elif model_name == "cheng2020-anchor":
             self.model = cheng2020_anchor(quality=quality, pretrained=True).eval().to(device)
         else:
-            raise ValueError('model name not supported')
+            raise ValueError("model name not supported")
         self.device = device
 
     def attack(self, img):
         img = img.copy()
-        img = img.convert('RGB')
+        img = img.convert("RGB")
         img = img.resize((512, 512))
         img = transforms.ToTensor()(img).unsqueeze(0).to(self.device)
         out = self.model(img)
-        out['x_hat'].clamp_(0, 1)
-        rec = transforms.ToPILImage()(out['x_hat'].squeeze().cpu())
+        out["x_hat"].clamp_(0, 1)
+        rec = transforms.ToPILImage()(out["x_hat"].squeeze().cpu())
         return rec
+
 
 class GaussianBlurAttacker(WMAttacker):
     def __init__(self, kernel_size=5, sigma=1):
@@ -71,10 +72,10 @@ class GaussianNoiseAttacker(WMAttacker):
         image = image / 255.0
         # Add Gaussian noise to the image
         noise_sigma = self.std  # Vary this to change the amount of noise
-        noisy_image = random_noise(image, mode='gaussian', var=noise_sigma ** 2)
+        noisy_image = random_noise(image, mode="gaussian", var=noise_sigma**2)
         # Clip the values to [0, 1] range after adding the noise
         noisy_image = np.clip(noisy_image, 0, 1)
-        noisy_image = np.array(255 * noisy_image, dtype='uint8')
+        noisy_image = np.array(255 * noisy_image, dtype="uint8")
         return noisy_image
 
 
@@ -84,9 +85,10 @@ class BM3DAttacker(WMAttacker):
 
     def attack(self, img):
         img = img.copy()
-        img = img.convert('RGB')
+        img = img.convert("RGB")
         y_est = bm3d_rgb(np.array(img) / 255, 0.1)  # use standard deviation as 0.1, 0.05 also works
         return np.clip(y_est, 0, 1)
+
 
 # TODO:
 # class JPEGAttacker(WMAttacker):
@@ -147,10 +149,10 @@ class CropAttacker(WMAttacker):
         self.crop_size = crop_size
 
     def attack(self, img):
-            img = img.copy()
-            w, h = img.size
-            img = img.crop((int(w * self.crop_size), int(h * self.crop_size), w, h))
-            return img
+        img = img.copy()
+        w, h = img.size
+        img = img.crop((int(w * self.crop_size), int(h * self.crop_size), w, h))
+        return img
 
 
 class DiffWMAttacker(WMAttacker):
@@ -159,7 +161,7 @@ class DiffWMAttacker(WMAttacker):
         self.BATCH_SIZE = 1
         self.device = pipe.device
         self.noise_step = noise_step
-        print(f'Diffuse attack initialized with noise step {self.noise_step}')
+        print(f"Diffuse attack initialized with noise step {self.noise_step}")
 
     def attack(self, img, prompt=""):
         with torch.no_grad():
@@ -171,11 +173,13 @@ class DiffWMAttacker(WMAttacker):
 
             def batched_attack(latents_buf, prompts_buf):
                 latents = torch.cat(latents_buf, dim=0)
-                image = self.pipe(prompts_buf,
-                                   head_start_latents=latents,
-                                   head_start_step=50 - max(self.noise_step // 20, 1),
-                                   guidance_scale=7.5,
-                                   generator=generator, )
+                image = self.pipe(
+                    prompts_buf,
+                    head_start_latents=latents,
+                    head_start_step=50 - max(self.noise_step // 20, 1),
+                    guidance_scale=7.5,
+                    generator=generator,
+                )
 
                 return image[0][0]
 

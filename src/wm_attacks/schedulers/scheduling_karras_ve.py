@@ -195,9 +195,7 @@ class KarrasVeScheduler(SchedulerMixin, ConfigMixin):
         if not return_dict:
             return (sample_prev, derivative)
 
-        return KarrasVeOutput(
-            prev_sample=sample_prev, derivative=derivative, pred_original_sample=pred_original_sample
-        )
+        return KarrasVeOutput(prev_sample=sample_prev, derivative=derivative, pred_original_sample=pred_original_sample)
 
     def step_correct(
         self,
@@ -234,9 +232,7 @@ class KarrasVeScheduler(SchedulerMixin, ConfigMixin):
         if not return_dict:
             return (sample_prev, derivative)
 
-        return KarrasVeOutput(
-            prev_sample=sample_prev, derivative=derivative, pred_original_sample=pred_original_sample
-        )
+        return KarrasVeOutput(prev_sample=sample_prev, derivative=derivative, pred_original_sample=pred_original_sample)
 
     def add_noise(self, original_samples, noise, timesteps):
         raise NotImplementedError()

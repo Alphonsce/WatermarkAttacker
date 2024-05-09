@@ -253,9 +253,7 @@ class Decoder(nn.Module):
                     )
             else:
                 # middle
-                sample = torch.utils.checkpoint.checkpoint(
-                    create_custom_forward(self.mid_block), sample, latent_embeds
-                )
+                sample = torch.utils.checkpoint.checkpoint(create_custom_forward(self.mid_block), sample, latent_embeds)
                 sample = sample.to(upscale_dtype)
 
                 # up
@@ -476,9 +474,7 @@ class MaskConditionDecoder(nn.Module):
                     sample = sample * mask + im_x[str(tuple(sample.shape))] * (1 - mask)
             else:
                 # middle
-                sample = torch.utils.checkpoint.checkpoint(
-                    create_custom_forward(self.mid_block), sample, latent_embeds
-                )
+                sample = torch.utils.checkpoint.checkpoint(create_custom_forward(self.mid_block), sample, latent_embeds)
                 sample = sample.to(upscale_dtype)
 
                 # condition encoder

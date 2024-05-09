@@ -104,6 +104,7 @@ class FlaxDiffusionPipeline(ConfigMixin):
         - **config_name** ([`str`]) -- The configuration filename that stores the class and module names of all the
           diffusion pipeline's components.
     """
+
     config_name = "model_index.json"
 
     def register_modules(self, **kwargs):

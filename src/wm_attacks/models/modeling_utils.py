@@ -156,6 +156,7 @@ class ModelMixin(torch.nn.Module):
 
         - **config_name** ([`str`]) -- Filename to save a model to when calling [`~models.ModelMixin.save_pretrained`].
     """
+
     config_name = CONFIG_NAME
     _automatically_saved_args = ["_diffusers_version", "_class_name", "_name_or_path"]
     _supports_gradient_checkpointing = False
@@ -206,9 +207,7 @@ class ModelMixin(torch.nn.Module):
         if self._supports_gradient_checkpointing:
             self.apply(partial(self._set_gradient_checkpointing, value=False))
 
-    def set_use_memory_efficient_attention_xformers(
-        self, valid: bool, attention_op: Optional[Callable] = None
-    ) -> None:
+    def set_use_memory_efficient_attention_xformers(self, valid: bool, attention_op: Optional[Callable] = None) -> None:
         # Recursively walk through all the children.
         # Any children which exposes the set_use_memory_efficient_attention_xformers method
         # gets the message
@@ -600,9 +599,7 @@ class ModelMixin(torch.nn.Module):
 
                     empty_state_dict = model.state_dict()
                     for param_name, param in state_dict.items():
-                        accepts_dtype = "dtype" in set(
-                            inspect.signature(set_module_tensor_to_device).parameters.keys()
-                        )
+                        accepts_dtype = "dtype" in set(inspect.signature(set_module_tensor_to_device).parameters.keys())
 
                         if param_name not in empty_state_dict:
                             unexpected_keys.append(param_name)
@@ -614,9 +611,7 @@ class ModelMixin(torch.nn.Module):
                             )
 
                         if accepts_dtype:
-                            set_module_tensor_to_device(
-                                model, param_name, param_device, value=param, dtype=torch_dtype
-                            )
+                            set_module_tensor_to_device(model, param_name, param_device, value=param, dtype=torch_dtype)
                         else:
                             set_module_tensor_to_device(model, param_name, param_device, value=param)
 

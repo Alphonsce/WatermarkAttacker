@@ -54,9 +54,9 @@ if is_torch_available():
         logger.info(f"torch_device overrode to {torch_device}")
     else:
         torch_device = "cuda" if torch.cuda.is_available() else "cpu"
-        is_torch_higher_equal_than_1_12 = version.parse(
-            version.parse(torch.__version__).base_version
-        ) >= version.parse("1.12")
+        is_torch_higher_equal_than_1_12 = version.parse(version.parse(torch.__version__).base_version) >= version.parse(
+            "1.12"
+        )
 
         if is_torch_higher_equal_than_1_12:
             # Some builds of torch 1.12 don't have the mps backend registered. See #892 for more details
@@ -182,9 +182,7 @@ def require_torch_2(test_case):
 
 def require_torch_gpu(test_case):
     """Decorator marking a test that requires CUDA and PyTorch."""
-    return unittest.skipUnless(is_torch_available() and torch_device == "cuda", "test requires PyTorch+CUDA")(
-        test_case
-    )
+    return unittest.skipUnless(is_torch_available() and torch_device == "cuda", "test requires PyTorch+CUDA")(test_case)
 
 
 def skip_mps(test_case):

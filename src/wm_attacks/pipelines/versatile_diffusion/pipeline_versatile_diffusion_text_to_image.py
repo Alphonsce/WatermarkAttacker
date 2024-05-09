@@ -51,6 +51,7 @@ class VersatileDiffusionTextToImagePipeline(DiffusionPipeline):
             A scheduler to be used in combination with `unet` to denoise the encoded image latents. Can be one of
             [`DDIMScheduler`], [`LMSDiscreteScheduler`], or [`PNDMScheduler`].
     """
+
     tokenizer: CLIPTokenizer
     image_feature_extractor: CLIPImageProcessor
     text_encoder: CLIPTextModelWithProjection

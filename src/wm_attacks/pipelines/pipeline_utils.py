@@ -489,6 +489,7 @@ class DiffusionPipeline(ConfigMixin):
         - **_optional_components** (`List[str]`) -- List of all optional components that don't have to be passed to the
           pipeline to function (should be overridden by subclasses).
     """
+
     config_name = "model_index.json"
     _optional_components = []
     _exclude_from_cpu_offload = []
@@ -937,9 +938,7 @@ class DiffusionPipeline(ConfigMixin):
             for folder in os.listdir(cached_folder):
                 folder_path = os.path.join(cached_folder, folder)
                 is_folder = os.path.isdir(folder_path) and folder in config_dict
-                variant_exists = is_folder and any(
-                    p.split(".")[1].startswith(variant) for p in os.listdir(folder_path)
-                )
+                variant_exists = is_folder and any(p.split(".")[1].startswith(variant) for p in os.listdir(folder_path))
                 if variant_exists:
                     model_variants[folder] = variant
 
@@ -1370,9 +1369,7 @@ class DiffusionPipeline(ConfigMixin):
             if revision in DEPRECATED_REVISION_ARGS and version.parse(
                 version.parse(__version__).base_version
             ) >= version.parse("0.22.0"):
-                warn_deprecated_model_variant(
-                    pretrained_model_name, use_auth_token, variant, revision, model_filenames
-                )
+                warn_deprecated_model_variant(pretrained_model_name, use_auth_token, variant, revision, model_filenames)
 
             model_folder_names = {os.path.split(f)[0] for f in model_filenames if os.path.split(f)[0] in folder_names}
 
@@ -1407,9 +1404,7 @@ class DiffusionPipeline(ConfigMixin):
             if (
                 use_safetensors
                 and not allow_pickle
-                and not is_safetensors_compatible(
-                    model_filenames, variant=variant, passed_components=passed_components
-                )
+                and not is_safetensors_compatible(model_filenames, variant=variant, passed_components=passed_components)
             ):
                 raise EnvironmentError(
                     f"Could not found the necessary `safetensors` weights in {model_filenames} (variant={variant})"
@@ -1640,9 +1635,7 @@ class DiffusionPipeline(ConfigMixin):
         """
         self.set_use_memory_efficient_attention_xformers(False)
 
-    def set_use_memory_efficient_attention_xformers(
-        self, valid: bool, attention_op: Optional[Callable] = None
-    ) -> None:
+    def set_use_memory_efficient_attention_xformers(self, valid: bool, attention_op: Optional[Callable] = None) -> None:
         # Recursively walk through all the children.
         # Any children which exposes the set_use_memory_efficient_attention_xformers method
         # gets the message

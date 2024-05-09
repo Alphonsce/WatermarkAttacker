@@ -42,6 +42,7 @@ class FlaxCrossAttnDownBlock2D(nn.Module):
         dtype (:obj:`jnp.dtype`, *optional*, defaults to jnp.float32):
             Parameters `dtype`
     """
+
     in_channels: int
     out_channels: int
     dropout: float = 0.0
@@ -119,6 +120,7 @@ class FlaxDownBlock2D(nn.Module):
         dtype (:obj:`jnp.dtype`, *optional*, defaults to jnp.float32):
             Parameters `dtype`
     """
+
     in_channels: int
     out_channels: int
     dropout: float = 0.0
@@ -181,6 +183,7 @@ class FlaxCrossAttnUpBlock2D(nn.Module):
         dtype (:obj:`jnp.dtype`, *optional*, defaults to jnp.float32):
             Parameters `dtype`
     """
+
     in_channels: int
     out_channels: int
     prev_output_channel: int
@@ -263,6 +266,7 @@ class FlaxUpBlock2D(nn.Module):
         dtype (:obj:`jnp.dtype`, *optional*, defaults to jnp.float32):
             Parameters `dtype`
     """
+
     in_channels: int
     out_channels: int
     prev_output_channel: int
@@ -324,6 +328,7 @@ class FlaxUNetMidBlock2DCrossAttn(nn.Module):
         dtype (:obj:`jnp.dtype`, *optional*, defaults to jnp.float32):
             Parameters `dtype`
     """
+
     in_channels: int
     dropout: float = 0.0
     num_layers: int = 1

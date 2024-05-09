@@ -135,6 +135,7 @@ class FlaxAttention(nn.Module):
             Parameters `dtype`
 
     """
+
     query_dim: int
     heads: int = 8
     dim_head: int = 64
@@ -240,6 +241,7 @@ class FlaxBasicTransformerBlock(nn.Module):
         use_memory_efficient_attention (`bool`, *optional*, defaults to `False`):
             enable memory efficient attention https://arxiv.org/abs/2112.05682
     """
+
     dim: int
     n_heads: int
     d_head: int
@@ -309,6 +311,7 @@ class FlaxTransformer2DModel(nn.Module):
         use_memory_efficient_attention (`bool`, *optional*, defaults to `False`):
             enable memory efficient attention https://arxiv.org/abs/2112.05682
     """
+
     in_channels: int
     n_heads: int
     d_head: int
@@ -402,6 +405,7 @@ class FlaxFeedForward(nn.Module):
         dtype (:obj:`jnp.dtype`, *optional*, defaults to jnp.float32):
             Parameters `dtype`
     """
+
     dim: int
     dropout: float = 0.0
     dtype: jnp.dtype = jnp.float32
@@ -431,6 +435,7 @@ class FlaxGEGLU(nn.Module):
         dtype (:obj:`jnp.dtype`, *optional*, defaults to jnp.float32):
             Parameters `dtype`
     """
+
     dim: int
     dropout: float = 0.0
     dtype: jnp.dtype = jnp.float32

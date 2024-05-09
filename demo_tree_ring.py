@@ -31,13 +31,13 @@ from tqdm import tqdm
 # In[3]:
 
 
-wm_text = 'test'
-device = 'cuda:0'
+wm_text = "test"
+device = "cuda:0"
 
 images_folder = "/data/varlamov_a_data/dima/attacks/WatermarkAttacker/fid_outputs/coco/fid_run"
-orig_path = images_folder + '/no_w_gen'
-wm_path = images_folder + '/w_gen'
-att_path = images_folder + '/att_w_gen'
+orig_path = images_folder + "/no_w_gen"
+wm_path = images_folder + "/w_gen"
+att_path = images_folder + "/att_w_gen"
 
 print_width = 50
 
@@ -46,8 +46,10 @@ print_width = 50
 
 
 os.makedirs(wm_path, exist_ok=True)
-ori_img_paths = glob.glob(os.path.join(orig_path, '*.*'))
-ori_img_paths = sorted([path for path in ori_img_paths if path.lower().endswith(('.jpg', '.jpeg', '.png', '.bmp', '.gif'))])
+ori_img_paths = glob.glob(os.path.join(orig_path, "*.*"))
+ori_img_paths = sorted(
+    [path for path in ori_img_paths if path.lower().endswith((".jpg", ".jpeg", ".png", ".bmp", ".gif"))]
+)
 
 # print(len(ori_img_paths))
 
@@ -60,10 +62,8 @@ ori_img_paths = sorted([path for path in ori_img_paths if path.lower().endswith(
 #     'RivaGAN': InvisibleWatermarker(wm_text, 'rivaGan'),
 # }
 
-# 
-wmarkers = {
-    'Tree-Ring': None
-}
+#
+wmarkers = {"Tree-Ring": None}
 
 # In[6]:
 
@@ -71,7 +71,7 @@ wmarkers = {
 pipe = ReSDPipeline.from_pretrained("stabilityai/stable-diffusion-2-1", torch_dtype=torch.float16, revision="fp16")
 pipe.set_progress_bar_config(disable=True)
 pipe.to(device)
-print('Finished loading model')
+print("Finished loading model")
 
 
 # In[7]:
@@ -79,7 +79,7 @@ print('Finished loading model')
 
 attackers = {
     # 'diff_attacker_60': DiffWMAttacker(pipe, batch_size=5, noise_step=60, captions={}),
-    'cheng2020-anchor_3': VAEWMAttacker('cheng2020-anchor', quality=3, metric='mse', device=device),
+    "cheng2020-anchor_3": VAEWMAttacker("cheng2020-anchor", quality=3, metric="mse", device=device),
     # 'bmshj2018-factorized_3': VAEWMAttacker('bmshj2018-factorized', quality=3, metric='mse', device=device),
     # 'rotation_75': RotateAttacker(degree=75),
     # 'jpeg_attacker_25': JPEGAttacker(quality=25),
@@ -119,7 +119,7 @@ for ori_img_path in ori_img_paths:
     att_img_paths.append(os.path.join(att_path, img_name))
 attacker.attack(wm_img_paths, att_img_paths)
 
-print('Finished attacking')
+print("Finished attacking")
 
 
 # In[10]:
@@ -147,10 +147,8 @@ wm_ssim = np.array(wm_ssim_list).mean()
 att_psnr = np.array(att_psnr_list).mean()
 att_ssim_list = np.array(att_ssim_list).mean()
 
-print(
-    f"{wm_psnr=}, {wm_ssim=}, {att_psnr=}, {att_ssim=}"
-)
-print('Finished evaluating watermarking')
+print(f"{wm_psnr=}, {wm_ssim=}, {att_psnr=}, {att_ssim=}")
+print("Finished evaluating watermarking")
 
 
 # # In[11]:
@@ -264,4 +262,3 @@ print('Finished evaluating watermarking')
 
 
 # Image(filename='examples/wm_imgs/DwtDct/diff_attacker_60/'+img_id) # diffusion attacker
-

@@ -898,6 +898,7 @@ class LoraLoaderMixin:
     Load LoRA layers into [`UNet2DConditionModel`] and
     [`CLIPTextModel`](https://huggingface.co/docs/transformers/model_doc/clip#transformers.CLIPTextModel).
     """
+
     text_encoder_name = TEXT_ENCODER_NAME
     unet_name = UNET_NAME
 
@@ -1254,31 +1255,31 @@ class LoraLoaderMixin:
                     # existing module. We want to be able to load them via their actual state dict.
                     # They're in `PatchedLoraProjection.lora_linear_layer` now.
                     for name, _ in text_encoder_attn_modules(text_encoder):
-                        text_encoder_lora_state_dict[
-                            f"{name}.q_proj.lora_linear_layer.up.weight"
-                        ] = text_encoder_lora_state_dict.pop(f"{name}.to_q_lora.up.weight")
-                        text_encoder_lora_state_dict[
-                            f"{name}.k_proj.lora_linear_layer.up.weight"
-                        ] = text_encoder_lora_state_dict.pop(f"{name}.to_k_lora.up.weight")
-                        text_encoder_lora_state_dict[
-                            f"{name}.v_proj.lora_linear_layer.up.weight"
-                        ] = text_encoder_lora_state_dict.pop(f"{name}.to_v_lora.up.weight")
-                        text_encoder_lora_state_dict[
-                            f"{name}.out_proj.lora_linear_layer.up.weight"
-                        ] = text_encoder_lora_state_dict.pop(f"{name}.to_out_lora.up.weight")
+                        text_encoder_lora_state_dict[f"{name}.q_proj.lora_linear_layer.up.weight"] = (
+                            text_encoder_lora_state_dict.pop(f"{name}.to_q_lora.up.weight")
+                        )
+                        text_encoder_lora_state_dict[f"{name}.k_proj.lora_linear_layer.up.weight"] = (
+                            text_encoder_lora_state_dict.pop(f"{name}.to_k_lora.up.weight")
+                        )
+                        text_encoder_lora_state_dict[f"{name}.v_proj.lora_linear_layer.up.weight"] = (
+                            text_encoder_lora_state_dict.pop(f"{name}.to_v_lora.up.weight")
+                        )
+                        text_encoder_lora_state_dict[f"{name}.out_proj.lora_linear_layer.up.weight"] = (
+                            text_encoder_lora_state_dict.pop(f"{name}.to_out_lora.up.weight")
+                        )
 
-                        text_encoder_lora_state_dict[
-                            f"{name}.q_proj.lora_linear_layer.down.weight"
-                        ] = text_encoder_lora_state_dict.pop(f"{name}.to_q_lora.down.weight")
-                        text_encoder_lora_state_dict[
-                            f"{name}.k_proj.lora_linear_layer.down.weight"
-                        ] = text_encoder_lora_state_dict.pop(f"{name}.to_k_lora.down.weight")
-                        text_encoder_lora_state_dict[
-                            f"{name}.v_proj.lora_linear_layer.down.weight"
-                        ] = text_encoder_lora_state_dict.pop(f"{name}.to_v_lora.down.weight")
-                        text_encoder_lora_state_dict[
-                            f"{name}.out_proj.lora_linear_layer.down.weight"
-                        ] = text_encoder_lora_state_dict.pop(f"{name}.to_out_lora.down.weight")
+                        text_encoder_lora_state_dict[f"{name}.q_proj.lora_linear_layer.down.weight"] = (
+                            text_encoder_lora_state_dict.pop(f"{name}.to_q_lora.down.weight")
+                        )
+                        text_encoder_lora_state_dict[f"{name}.k_proj.lora_linear_layer.down.weight"] = (
+                            text_encoder_lora_state_dict.pop(f"{name}.to_k_lora.down.weight")
+                        )
+                        text_encoder_lora_state_dict[f"{name}.v_proj.lora_linear_layer.down.weight"] = (
+                            text_encoder_lora_state_dict.pop(f"{name}.to_v_lora.down.weight")
+                        )
+                        text_encoder_lora_state_dict[f"{name}.out_proj.lora_linear_layer.down.weight"] = (
+                            text_encoder_lora_state_dict.pop(f"{name}.to_out_lora.down.weight")
+                        )
 
                 rank = text_encoder_lora_state_dict[
                     "text_model.encoder.layers.0.self_attn.out_proj.lora_linear_layer.up.weight"

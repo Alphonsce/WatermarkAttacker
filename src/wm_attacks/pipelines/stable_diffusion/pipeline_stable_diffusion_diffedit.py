@@ -277,6 +277,7 @@ class StableDiffusionDiffEditPipeline(DiffusionPipeline, TextualInversionLoaderM
         feature_extractor ([`CLIPImageProcessor`]):
             A [`CLIPImageProcessor`] to extract features from generated images; used as inputs to the `safety_checker`.
     """
+
     _optional_components = ["safety_checker", "feature_extractor", "inverse_scheduler"]
 
     def __init__(
@@ -502,9 +503,7 @@ class StableDiffusionDiffEditPipeline(DiffusionPipeline, TextualInversionLoaderM
             if untruncated_ids.shape[-1] >= text_input_ids.shape[-1] and not torch.equal(
                 text_input_ids, untruncated_ids
             ):
-                removed_text = self.tokenizer.batch_decode(
-                    untruncated_ids[:, self.tokenizer.model_max_length - 1 : -1]
-                )
+                removed_text = self.tokenizer.batch_decode(untruncated_ids[:, self.tokenizer.model_max_length - 1 : -1])
                 logger.warning(
                     "The following part of your input was truncated because CLIP can only handle sequences up to"
                     f" {self.tokenizer.model_max_length} tokens: {removed_text}"
@@ -707,9 +706,7 @@ class StableDiffusionDiffEditPipeline(DiffusionPipeline, TextualInversionLoaderM
             raise ValueError(
                 "Provide either `source_image` or `source_prompt_embeds`. Cannot leave all both of the arguments undefined."
             )
-        elif source_prompt is not None and (
-            not isinstance(source_prompt, str) and not isinstance(source_prompt, list)
-        ):
+        elif source_prompt is not None and (not isinstance(source_prompt, str) and not isinstance(source_prompt, list)):
             raise ValueError(f"`source_prompt` has to be of type `str` or `list` but is {type(source_prompt)}")
 
         if source_negative_prompt is not None and source_negative_prompt_embeds is not None:

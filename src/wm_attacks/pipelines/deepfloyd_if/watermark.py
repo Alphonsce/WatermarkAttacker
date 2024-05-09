@@ -36,9 +36,7 @@ class IFWatermarker(ModelMixin, ConfigMixin):
             watermark_image = Image.fromarray(watermark_image, mode="RGBA")
             self.watermark_image_as_pil = watermark_image
 
-        wm_img = self.watermark_image_as_pil.resize(
-            (wm_size, wm_size), PIL_INTERPOLATION["bicubic"], reducing_gap=None
-        )
+        wm_img = self.watermark_image_as_pil.resize((wm_size, wm_size), PIL_INTERPOLATION["bicubic"], reducing_gap=None)
 
         for pil_img in images:
             pil_img.paste(wm_img, box=(wm_x - wm_size, wm_y - wm_size, wm_x, wm_y), mask=wm_img.split()[-1])

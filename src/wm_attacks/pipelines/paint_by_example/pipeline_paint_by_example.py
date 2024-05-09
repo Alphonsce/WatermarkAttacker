@@ -167,6 +167,7 @@ class PaintByExamplePipeline(DiffusionPipeline):
             A `CLIPImageProcessor` to extract features from generated images; used as inputs to the `safety_checker`.
 
     """
+
     # TODO: feature_extractor is required to encode initial images (if they are in PIL format),
     # we should give a descriptive message if the pipeline doesn't have one.
     _optional_components = ["safety_checker"]
@@ -501,9 +502,7 @@ class PaintByExamplePipeline(DiffusionPipeline):
         self.check_inputs(example_image, height, width, callback_steps)
 
         # 4. Encode input image
-        image_embeddings = self._encode_image(
-            example_image, device, num_images_per_prompt, do_classifier_free_guidance
-        )
+        image_embeddings = self._encode_image(example_image, device, num_images_per_prompt, do_classifier_free_guidance)
 
         # 5. set timesteps
         self.scheduler.set_timesteps(num_inference_steps, device=device)

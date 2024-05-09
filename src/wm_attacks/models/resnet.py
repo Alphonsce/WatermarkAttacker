@@ -684,9 +684,7 @@ class ResidualTemporalBlock1D(nn.Module):
         self.time_emb_act = nn.Mish()
         self.time_emb = nn.Linear(embed_dim, out_channels)
 
-        self.residual_conv = (
-            nn.Conv1d(inp_channels, out_channels, 1) if inp_channels != out_channels else nn.Identity()
-        )
+        self.residual_conv = nn.Conv1d(inp_channels, out_channels, 1) if inp_channels != out_channels else nn.Identity()
 
     def forward(self, inputs, t):
         """

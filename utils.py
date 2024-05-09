@@ -13,16 +13,16 @@ def compute_psnr(a, b):
 
 
 def compute_msssim(a, b):
-    return ms_ssim(a, b, data_range=1.).item()
+    return ms_ssim(a, b, data_range=1.0).item()
 
 
 def compute_ssim(a, b):
-    return ssim(a, b, data_range=1.).item()
+    return ssim(a, b, data_range=1.0).item()
 
 
 def eval_psnr_ssim_msssim(ori_img_path, new_img_path):
-    ori_img = Image.open(ori_img_path).convert('RGB')
-    new_img = Image.open(new_img_path).convert('RGB')
+    ori_img = Image.open(ori_img_path).convert("RGB")
+    new_img = Image.open(new_img_path).convert("RGB")
     if ori_img.size != new_img.size:
         new_img = new_img.resize(ori_img.size)
     ori_x = transforms.ToTensor()(ori_img).unsqueeze(0)
@@ -35,6 +35,6 @@ def bytearray_to_bits(x):
     result = []
     for i in x:
         bits = bin(i)[2:]
-        bits = '00000000'[len(bits):] + bits
+        bits = "00000000"[len(bits) :] + bits
         result.extend([int(b) for b in bits])
     return result
