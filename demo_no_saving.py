@@ -30,10 +30,10 @@ from tqdm import tqdm
 # In[3]:
 
 
-wm_text = 'test'
-device = 'cuda:0'
-ori_path = 'images/imgs_no_w/'
-output_path = 'images/imgs_w/'
+wm_text = "test"
+device = "cuda:0"
+ori_path = "images/imgs_no_w/"
+output_path = "images/imgs_w/"
 print_width = 50
 
 
@@ -41,8 +41,10 @@ print_width = 50
 
 
 os.makedirs(output_path, exist_ok=True)
-ori_img_paths = glob.glob(os.path.join(ori_path, '*.*'))
-ori_img_paths = sorted([path for path in ori_img_paths if path.lower().endswith(('.jpg', '.jpeg', '.png', '.bmp', '.gif'))])
+ori_img_paths = glob.glob(os.path.join(ori_path, "*.*"))
+ori_img_paths = sorted(
+    [path for path in ori_img_paths if path.lower().endswith((".jpg", ".jpeg", ".png", ".bmp", ".gif"))]
+)
 
 
 # In[5]:
@@ -54,10 +56,8 @@ ori_img_paths = sorted([path for path in ori_img_paths if path.lower().endswith(
 #     'RivaGAN': InvisibleWatermarker(wm_text, 'rivaGan'),
 # }
 
-# 
-wmarkers = {
-    'Tree-Ring': None
-}
+#
+wmarkers = {"Tree-Ring": None}
 
 # In[6]:
 
@@ -65,16 +65,16 @@ wmarkers = {
 pipe = ReSDPipeline.from_pretrained("stabilityai/stable-diffusion-2-1", torch_dtype=torch.float16, revision="fp16")
 pipe.set_progress_bar_config(disable=True)
 pipe.to(device)
-print('Finished loading model')
+print("Finished loading model")
 
 
 # In[7]:
 
 
 attackers = {
-    'diff_attacker_60': DiffWMAttacker(pipe, noise_step=60),
-    'cheng2020-anchor_3': VAEWMAttacker('cheng2020-anchor', quality=3, metric='mse', device=device),
-    'bmshj2018-factorized_3': VAEWMAttacker('bmshj2018-factorized', quality=3, metric='mse', device=device),
+    "diff_attacker_60": DiffWMAttacker(pipe, noise_step=60),
+    "cheng2020-anchor_3": VAEWMAttacker("cheng2020-anchor", quality=3, metric="mse", device=device),
+    "bmshj2018-factorized_3": VAEWMAttacker("bmshj2018-factorized", quality=3, metric="mse", device=device),
     # 'rotation_75': RotateAttacker(degree=75),
     # 'jpeg_attacker_25': JPEGAttacker(quality=25),
     # 'crop_0_75': CropAttacker(crop_size=0.75),
@@ -101,18 +101,18 @@ attackers = {
 
 # In[9]:
 
-os.makedirs(os.path.join(output_path, wmarker_name, attacker_name), exist_ok=True)``
+# os.makedirs(os.path.join(output_path, wmarker_name, attacker_name), exist_ok=True)
 
 for attacker_name in attackers.keys():
     for ori_img_path in tqdm(ori_img_paths[:1]):
         img_name = os.path.basename(ori_img_path)
-        wm_img_path = os.path.join(output_path, "Tree-Ring" + '/noatt', "w_" + img_name)
+        wm_img_path = os.path.join(output_path, "Tree-Ring" + "/noatt", "w_" + img_name)
         wm_img = PIL.Image.open(wm_img_path)
         attacked_wm_img = attackers[attacker_name].attack(wm_img)
-    
+
     attacked_wm_img.save(f"./test_attacks/{attacker_name}_test.png")
 
-print('Finished attacking')
+print("Finished attacking")
 
 
 # In[10]:
@@ -251,4 +251,3 @@ print('Finished attacking')
 
 
 # Image(filename='examples/wm_imgs/DwtDct/diff_attacker_60/'+img_id) # diffusion attacker
-
